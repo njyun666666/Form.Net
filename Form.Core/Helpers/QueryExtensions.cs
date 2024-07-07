@@ -1,6 +1,6 @@
-﻿using FormAPI.Models.Query;
+﻿using FormCore.Models.Query;
 
-namespace FormAPI.Helper;
+namespace FormCore.Helper;
 
 public static class QueryExtensions
 {

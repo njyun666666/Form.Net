@@ -6,10 +6,6 @@ namespace FormAPI.Controllers;
 [Controller]
 public class BaseController : ControllerBase
 {
-	public BaseController()
-	{
-
-	}
 	public string _uid => GetUserClaim("uid").FirstOrDefault();
 	public List<string> _roles => GetUserClaim(ClaimTypes.Role);
 
@@ -27,7 +23,7 @@ public class BaseController : ControllerBase
 			}
 		}
 
-		return new List<string>();
+		return [];
 	}
 
 	[NonAction]

@@ -1,4 +1,4 @@
-﻿namespace FormAPI.Models.Query;
+﻿namespace FormCore.Models.Query;
 
 public class OptionModel
 {

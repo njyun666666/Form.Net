@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace FormAPI.Models.Login;
+namespace FormCore.Models.Login;
 
 public class LoginModel
 {

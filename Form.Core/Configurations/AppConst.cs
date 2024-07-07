@@ -1,4 +1,4 @@
-﻿namespace FormCore.Configuration;
+﻿namespace FormCore.Configurations;
 
 public class AppConst
 {

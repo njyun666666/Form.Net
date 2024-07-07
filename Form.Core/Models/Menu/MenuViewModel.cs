@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace FormAPI.Models.Menu;
+namespace FormCore.Models.Menu;
 
 public class MenuViewModel
 {

@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace FormAPI.Errors;
+namespace FormCore.Errors;
 
 public class RestException : Exception
 {

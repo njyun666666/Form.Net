@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using FormAPI.Models.Menu;
+using FormCore.Models.Menu;
 using FormDB.Models;
 
-namespace FormAPI.Models;
+namespace FormCore.Models;
 
 public class ModelProfile : Profile
 {

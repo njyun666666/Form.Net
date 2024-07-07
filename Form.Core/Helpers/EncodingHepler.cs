@@ -5,6 +5,10 @@ namespace FormCore.Helpers;
 
 public class EncodingHepler
 {
+	public static string NewID()
+	{
+		return Guid.NewGuid().ToString().Replace("-", "");
+	}
 	public static string ComputeHMACSHA256(string data, string key)
 	{
 		var keyBytes = Encoding.UTF8.GetBytes(key);
@@ -16,8 +20,4 @@ public class EncodingHepler
 		}
 	}
 
-	public static string NewID()
-	{
-		return Guid.NewGuid().ToString().Replace("-", "");
-	}
 }

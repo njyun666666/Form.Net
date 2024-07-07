@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using FormCore.Helpers;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -6,14 +7,9 @@ using System.Text;
 
 namespace FormCore.Jwt;
 
-public class JwtHelper
+public class JwtHelper(IConfiguration config)
 {
-	private readonly IConfiguration _config;
-
-	public JwtHelper(IConfiguration config)
-	{
-		_config = config;
-	}
+	private readonly IConfiguration _config = config;
 
 	public string GenerateToken(string userName, List<Claim> claims, int expireMinutes = 30)
 	{
@@ -24,7 +20,7 @@ public class JwtHelper
 		var issuer = _config.GetValue<string>("JwtSettings:Issuer");
 		var signKey = _config.GetValue<string>("JwtSettings:SignKey");
 		claims.Add(new Claim(JwtRegisteredClaimNames.Sub, userName)); // User.Identity.Name
-		claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())); // JWT ID
+		claims.Add(new Claim(JwtRegisteredClaimNames.Jti, EncodingHepler.NewID())); // JWT ID
 
 		var userClaimsIdentity = new ClaimsIdentity(claims);
 

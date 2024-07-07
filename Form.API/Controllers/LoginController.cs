@@ -1,8 +1,9 @@
-﻿using FormAPI.Errors;
-using FormAPI.Models.Login;
-using FormCore.Configuration;
+﻿using FormAppConfig.Configuration;
+using FormCore.Configurations;
+using FormCore.Errors;
 using FormCore.Helpers;
 using FormCore.Jwt;
+using FormCore.Models.Login;
 using FormDB.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,18 +14,11 @@ namespace FormAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class LoginController : BaseController
+public class LoginController(AppConfig config, JwtHelper jwtHelper, FormDbContext context) : BaseController
 {
-	private readonly AppConfig _config;
-	private readonly JwtHelper _jwtHelper;
-	private readonly FormDbContext _context;
-
-	public LoginController(AppConfig config, JwtHelper jwtHelper, FormDbContext context)
-	{
-		_config = config;
-		_jwtHelper = jwtHelper;
-		_context = context;
-	}
+	private readonly AppConfig _config = config;
+	private readonly JwtHelper _jwtHelper = jwtHelper;
+	private readonly FormDbContext _context = context;
 
 	[HttpPost]
 	public async Task<ActionResult<TokenViewModel>> Index(LoginModel login)
@@ -88,7 +82,10 @@ public class LoginController : BaseController
 	{
 		List<Claim> claims = [new Claim("uid", user.Uid)];
 
-		claims.Add(new Claim("photoUrl", user.PhotoUrl));
+		if (!string.IsNullOrWhiteSpace(user.PhotoUrl))
+		{
+			claims.Add(new Claim("photoUrl", user.PhotoUrl));
+		}
 
 		if (user.TbOrgRoleUsers.Any(x => x.Rid == AppConst.Role.Administrator))
 		{
@@ -105,7 +102,7 @@ public class LoginController : BaseController
 			}
 		}
 
-		string refresh_token = Guid.NewGuid().ToString();
+		string refresh_token = EncodingHepler.NewID();
 		await _context.TbRefreshTokens.AddAsync(new TbRefreshToken()
 		{
 			RefreshToken = refresh_token,

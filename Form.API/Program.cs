@@ -1,7 +1,7 @@
-using FormAPI.Errors;
-using FormAPI.Models;
-using FormCore.Configuration;
+using FormAppConfig.Configuration;
+using FormCore.Errors;
 using FormCore.Jwt;
+using FormCore.Models;
 using FormDB.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;

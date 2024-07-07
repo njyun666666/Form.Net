@@ -1,4 +1,4 @@
-﻿using FormCore.Configuration;
+﻿using FormAppConfig;
 using FormDB.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
