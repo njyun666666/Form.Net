@@ -21,16 +21,13 @@ public class MenusController(FormDbContext context, IMapper mapper) : BaseContro
 	[HttpGet]
 	public async Task<ActionResult<List<MenuViewModel>>> GetTbMenus()
 	{
-		_menus = await _context.TbMenus
-			.Where(m => m.Enable && m.Rids.Where(r => r.Rid == AppConst.Role.Evenyone || _roles.Contains(r.Rid)).Any())
-			.OrderBy(m => m.Sort).ToListAsync();
-
+		_menus = await _context.TbMenus.Where(x => x.Enable && _context.FnAuth(_uid, x.MenuId)).OrderBy(m => m.Sort).ToListAsync();
 		return SetMenu(null);
 	}
 
 	// GET: api/Menus/AuthMenus
 	[HttpGet(nameof(AuthMenus))]
-	[Authorize(Roles = AppConst.Role.Administrator)]
+	[Authorize(Roles = AppConst.MenuId.AuthMenu)]
 	public async Task<ActionResult<List<AuthMenuViewModel>>> AuthMenus()
 	{
 		_menus = await _context.TbMenus.OrderBy(m => m.Sort).ToListAsync();

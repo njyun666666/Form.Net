@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace FormAppConfig.Configuration;
+namespace FormCore.Configuration;
 
 public class AppConfig
 {
@@ -12,6 +12,10 @@ public class AppConfig
 
 	public string APIKey()
 	{
+#if DEBUG
 		return _config["Key:Form.API"].ToString();
+#else
+		return AccessSecretVersion.Get(_config["ProjectID"], "FormAPIKey");
+#endif
 	}
 }

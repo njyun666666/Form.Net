@@ -1,4 +1,4 @@
-using FormAppConfig.Configuration;
+using FormCore.Configuration;
 using FormCore.Errors;
 using FormCore.Jwt;
 using FormCore.Models;
@@ -9,7 +9,16 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
+
 var builder = WebApplication.CreateBuilder(args);
+
+#if DEBUG
+string FormDB = builder.Configuration.GetConnectionString("FormDB");
+string FormAPIJwtSignKey = builder.Configuration["JwtSettings:SignKey"];
+#else
+	string FormDB = FormCore.Helpers.AccessSecretVersion.Get(builder.Configuration["ProjectID"], "FormDB");
+	string FormAPIJwtSignKey = FormCore.Helpers.AccessSecretVersion.Get(builder.Configuration["ProjectID"], "FormAPIJwtSignKey");
+#endif
 
 // Add services to the container.
 
@@ -56,12 +65,6 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddDbContext<FormDbContext>(options =>
 {
-#if DEBUG
-	string FormDB = builder.Configuration.GetConnectionString("FormDB");
-#else
-	string FormDB = FormCore.Helpers.AccessSecretVersion.Get(builder.Configuration["ProjectID"], "FormDB");
-#endif
-
 	options.UseMySql(FormDB, Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.34-mysql"));
 });
 
@@ -79,7 +82,7 @@ builder.Services
 			ValidateAudience = false,
 			ValidateLifetime = true,
 			ValidateIssuerSigningKey = false,
-			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetValue<string>("JwtSettings:SignKey")))
+			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(FormAPIJwtSignKey))
 		};
 	});
 

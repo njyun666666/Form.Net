@@ -1,5 +1,4 @@
-﻿using FormAppConfig.Configuration;
-using FormCore.Configurations;
+﻿using FormCore.Configuration;
 using FormCore.Errors;
 using FormCore.Helpers;
 using FormCore.Jwt;
@@ -24,7 +23,7 @@ public class LoginController(AppConfig config, JwtHelper jwtHelper, FormDbContex
 	public async Task<ActionResult<TokenViewModel>> Index(LoginModel login)
 	{
 		string encodingPW = EncodingHepler.ComputeHMACSHA256(login.Password, _config.APIKey());
-		var user = await _context.TbOrgUsers.Include(x => x.TbOrgRoleUsers).FirstOrDefaultAsync(x => x.Email == login.Email && x.Enable && x.Password == encodingPW);
+		var user = await _context.TbOrgUsers.FirstOrDefaultAsync(x => x.Email == login.Email && x.Enable && x.Password == encodingPW);
 
 		if (user == null)
 		{
@@ -56,7 +55,7 @@ public class LoginController(AppConfig config, JwtHelper jwtHelper, FormDbContex
 
 		_context.TbRefreshTokens.Remove(tbRefresh);
 
-		var user = await _context.TbOrgUsers.Include(x => x.TbOrgRoleUsers).FirstOrDefaultAsync(x => x.Uid == tbRefresh.Uid && x.Enable);
+		var user = await _context.TbOrgUsers.FirstOrDefaultAsync(x => x.Uid == tbRefresh.Uid && x.Enable);
 
 		if (user == null)
 		{
@@ -87,19 +86,10 @@ public class LoginController(AppConfig config, JwtHelper jwtHelper, FormDbContex
 			claims.Add(new Claim("photoUrl", user.PhotoUrl));
 		}
 
-		if (user.TbOrgRoleUsers.Any(x => x.Rid == AppConst.Role.Administrator))
+		var menuList = _context.TbMenus.Where(x => _context.FnAuth(user.Uid, x.MenuId)).Select(x => x.MenuId);
+		foreach (var menuId in menuList)
 		{
-			foreach (var rid in _context.TbOrgRoles.Select(x => x.Rid))
-			{
-				claims.Add(new Claim(ClaimTypes.Role, rid));
-			}
-		}
-		else
-		{
-			foreach (var rid in user.TbOrgRoleUsers.Select(x => x.Rid).Distinct())
-			{
-				claims.Add(new Claim(ClaimTypes.Role, rid));
-			}
+			claims.Add(new Claim(ClaimTypes.Role, menuId));
 		}
 
 		string refresh_token = EncodingHepler.NewID();

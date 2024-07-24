@@ -19,5 +19,5 @@ public partial class TbMenu
 
     public int Sort { get; set; }
 
-    public virtual ICollection<TbOrgRole> Rids { get; set; } = new List<TbOrgRole>();
+    public virtual ICollection<TbAuth> TbAuths { get; set; } = new List<TbAuth>();
 }

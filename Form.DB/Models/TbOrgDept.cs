@@ -22,6 +22,4 @@ public partial class TbOrgDept
     public string? LogId { get; set; }
 
     public virtual ICollection<TbOrgDeptUser> TbOrgDeptUsers { get; set; } = new List<TbOrgDeptUser>();
-
-    public virtual ICollection<TbOrgRoleUser> TbOrgRoleUsers { get; set; } = new List<TbOrgRoleUser>();
 }
