@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace FormCore;
+namespace FormCommon;
 
 public static class AppConfigurations
 {

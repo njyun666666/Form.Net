@@ -1,3 +1,4 @@
+using FormCommon.Services;
 using FormCore.Configuration;
 using FormCore.Errors;
 using FormCore.Jwt;
@@ -62,7 +63,7 @@ builder.Services.AddSwaggerGen(options =>
 	});
 
 });
-
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddDbContext<FormDbContext>(options =>
 {
 	options.UseMySql(FormDB, Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.34-mysql"));
@@ -88,6 +89,7 @@ builder.Services
 
 builder.Services.AddAuthorization();
 builder.Services.AddAutoMapper(typeof(ModelProfile));
+builder.Services.AddScoped<UserService>();
 
 var app = builder.Build();
 

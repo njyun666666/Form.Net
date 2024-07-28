@@ -1,4 +1,5 @@
-﻿using FormCore.Configuration;
+﻿using FormCommon.Services;
+using FormCore.Configuration;
 using FormCore.Errors;
 using FormCore.Helpers;
 using FormCore.Jwt;
@@ -13,11 +14,12 @@ namespace FormAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class LoginController(AppConfig config, JwtHelper jwtHelper, FormDbContext context) : BaseController
+public class LoginController(AppConfig config, JwtHelper jwtHelper, FormDbContext context, UserService userService) : BaseController(userService)
 {
 	private readonly AppConfig _config = config;
 	private readonly JwtHelper _jwtHelper = jwtHelper;
 	private readonly FormDbContext _context = context;
+	private readonly UserService _userService = userService;
 
 	[HttpPost]
 	public async Task<ActionResult<TokenViewModel>> Index(LoginModel login)
